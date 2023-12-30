@@ -2,7 +2,6 @@ import SwiftUI
 
 struct RouterView<Content: View, Destination: Route>: View {
     @StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
-    // Holds our root view content
     private let rootContent: (Router<Destination>) -> Content
     
     init(_ routeType: Destination.Type, @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
