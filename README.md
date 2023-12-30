@@ -1,3 +1,4 @@
 # Routing
 
-A description of this package.
+## Description
+`Routing` is a library for separating navigation logic from SwiftUI views.
