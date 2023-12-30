@@ -15,11 +15,12 @@ public class Router<Destination: Route>: ObservableObject {
         self.isPresented = isPresented
     }
     
-    // Builds the views
+    /// Returns the view associated with the specified `Route`
     @ViewBuilder func view(for route: Destination) -> some View {
         route.viewToDisplay(router: router(routeType: route.routeType))
     }
     
+    /// Routes to the specified `Route`.
     func routeTo(_ route: Destination) {
         switch route.routeType {
         case .push:
