@@ -9,7 +9,7 @@ public enum RouteType {
 public protocol Route: Hashable, Identifiable {
     associatedtype ViewType: View
     var id: UUID { get }
-    var navigationType: RouteType { get }
+    var routeType: RouteType { get }
     func viewToDisplay(router: Router<Self>) -> ViewType
 }
 

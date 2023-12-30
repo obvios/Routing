@@ -17,11 +17,11 @@ public class Router<Destination: Route>: ObservableObject {
     
     // Builds the views
     @ViewBuilder func view(for route: Destination) -> some View {
-        route.viewToDisplay(router: router(routeType: route.navigationType))
+        route.viewToDisplay(router: router(routeType: route.routeType))
     }
     
     func routeTo(_ route: Destination) {
-        switch route.navigationType {
+        switch route.routeType {
         case .push:
             push(route)
         case .sheet:
