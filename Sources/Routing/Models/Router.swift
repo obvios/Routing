@@ -19,12 +19,12 @@ public class Router<Destination: Routable>: ObservableObject {
     
     /// Returns the view associated with the specified `Routable`
     @ViewBuilder public func view(for route: Destination) -> some View {
-        route.viewToDisplay(router: router(routeType: route.routeType))
+        route.viewToDisplay(router: router(routeType: route.navigationType))
     }
     
     /// Routes to the specified `Routable`.
     public func routeTo(_ route: Destination) {
-        switch route.routeType {
+        switch route.navigationType {
         case .push:
             push(route)
         case .sheet:
@@ -68,8 +68,8 @@ public class Router<Destination: Routable>: ObservableObject {
     }
     
     // Return the appropriate Router instance based
-    // on `RouteType`
-    private func router(routeType: RouteType) -> Router {
+    // on `NavigationType`
+    private func router(routeType: NavigationType) -> Router {
         switch routeType {
         case .push:
             return self

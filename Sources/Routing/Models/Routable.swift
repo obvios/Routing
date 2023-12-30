@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum RouteType {
+public enum NavigationType {
     case push
     case sheet
     case fullScreenCover
@@ -9,7 +9,7 @@ public enum RouteType {
 public protocol Routable: Hashable, Identifiable {
     associatedtype ViewType: View
     var id: UUID { get }
-    var routeType: RouteType { get }
+    var navigationType: NavigationType { get }
     func viewToDisplay(router: Router<Self>) -> ViewType
 }
 
