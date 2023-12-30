@@ -1,7 +1,7 @@
 import SwiftUI
 
 // Represents the different ways we can navigate to a view
-enum NavigationType {
+enum RouteType {
     case push
     case sheet
     case fullScreenCover
@@ -10,7 +10,7 @@ enum NavigationType {
 protocol Route: Hashable, Identifiable {
     associatedtype ViewType: View
     var id: UUID { get }
-    var navigationType: NavigationType { get }
+    var navigationType: RouteType { get }
     func viewToDisplay(router: Router<Self>) -> ViewType
 }
 

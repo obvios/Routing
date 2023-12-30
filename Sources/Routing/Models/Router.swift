@@ -17,7 +17,7 @@ class Router<Destination: Route>: ObservableObject {
     
     // Builds the views
     @ViewBuilder func view(for route: Destination) -> some View {
-        route.viewToDisplay(router: router(navigationType: route.navigationType))
+        route.viewToDisplay(router: router(routeType: route.navigationType))
     }
     
     func routeTo(_ route: Destination) {
@@ -65,9 +65,9 @@ class Router<Destination: Route>: ObservableObject {
     }
     
     // Return the appropriate Router instance based
-    // on `NavigationType`
-    private func router(navigationType: NavigationType) -> Router {
-        switch navigationType {
+    // on `RouteType`
+    private func router(routeType: RouteType) -> Router {
+        switch routeType {
         case .push:
             return self
         case .sheet:
