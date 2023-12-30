@@ -1,6 +1,6 @@
 import SwiftUI
 
-public class Router<Destination: Route>: ObservableObject {
+public class Router<Destination: Routable>: ObservableObject {
     /// Used to programatically control a navigation stack
     @Published public var path: NavigationPath = NavigationPath()
     /// Used to present a view using a sheet
@@ -17,12 +17,12 @@ public class Router<Destination: Route>: ObservableObject {
         self.isPresented = isPresented
     }
     
-    /// Returns the view associated with the specified `Route`
+    /// Returns the view associated with the specified `Routable`
     @ViewBuilder public func view(for route: Destination) -> some View {
         route.viewToDisplay(router: router(routeType: route.routeType))
     }
     
-    /// Routes to the specified `Route`.
+    /// Routes to the specified `Routable`.
     public func routeTo(_ route: Destination) {
         switch route.routeType {
         case .push:

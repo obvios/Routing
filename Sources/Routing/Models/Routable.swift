@@ -6,14 +6,14 @@ public enum RouteType {
     case fullScreenCover
 }
 
-public protocol Route: Hashable, Identifiable {
+public protocol Routable: Hashable, Identifiable {
     associatedtype ViewType: View
     var id: UUID { get }
     var routeType: RouteType { get }
     func viewToDisplay(router: Router<Self>) -> ViewType
 }
 
-extension Route {
+extension Routable {
     public var id: UUID { .init() }
     
     func hash(into hasher: inout Hasher) {

@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct RoutingView<Content: View, Destination: Route>: View {
+public struct RoutingView<Content: View, Destination: Routable>: View {
     @StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
     private let rootContent: (Router<Destination>) -> Content
     
