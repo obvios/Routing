@@ -52,17 +52,14 @@ public class Router<Destination: Routable>: ObservableObject {
         }
     }
     
-    // Used by views to navigate to another view
     private func push(_ appRoute: Destination) {
         path.append(appRoute)
     }
     
-    // Used to present a screen using a sheet
     private func presentSheet(_ route: Destination) {
         self.presentingSheet = route
     }
     
-    // Used to present a screen using a full screen cover
     private func presentFullScreen(_ route: Destination) {
         self.presentingFullScreenCover = route
     }
