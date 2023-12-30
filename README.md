@@ -41,3 +41,38 @@ enum ExampleRoute: Routable {
     }
 }
 ```
+
+2. Wrap your view hierarchy with `RoutingView`. It will inject a `Router` instance into your root view.
+```swift
+import Routing
+
+struct ContentView: View {
+    var body: some View {
+        RoutingView(ExampleRoute.self) { router in
+            RootView(router: router)
+        }
+    }
+}
+
+struct RootView: View {
+    @StateObject var router: Router<ExampleRoute>
+    
+    init(router: Router<ExampleRoute>) {
+        _router = StateObject(wrappedValue: router)
+    }
+    
+    var body: some View {
+        VStack() {
+            Button("View A") {
+                router.routeTo(.viewA)
+            }
+            Button("View B") {
+                router.routeTo(.viewB("Got here from RootView"))
+            }
+            Button("View C") {
+                router.routeTo(.viewC)
+            }
+        }
+    }
+}
+```
