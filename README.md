@@ -42,7 +42,7 @@ enum ExampleRoute: Routable {
 }
 ```
 
-2. Wrap your view hierarchy with `RoutingView`. It will inject a `Router` instance into your root view.
+2. Wrap your view hierarchy with a `RoutingView` that is initialized with your `Routable` enum. It will inject a `Router` instance into your root view.
 ```swift
 import Routing
 
