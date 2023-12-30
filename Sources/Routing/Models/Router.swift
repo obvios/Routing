@@ -18,12 +18,12 @@ public class Router<Destination: Route>: ObservableObject {
     }
     
     /// Returns the view associated with the specified `Route`
-    @ViewBuilder func view(for route: Destination) -> some View {
+    @ViewBuilder public func view(for route: Destination) -> some View {
         route.viewToDisplay(router: router(routeType: route.routeType))
     }
     
     /// Routes to the specified `Route`.
-    func routeTo(_ route: Destination) {
+    public func routeTo(_ route: Destination) {
         switch route.routeType {
         case .push:
             push(route)
@@ -35,12 +35,12 @@ public class Router<Destination: Route>: ObservableObject {
     }
     
     // Pop to the root screen in our hierarchy
-    func popToRoot() {
+    public func popToRoot() {
         path.removeLast(path.count)
     }
     
     // Dismisses presented screen or self
-    func dismiss() {
+    public func dismiss() {
         if !path.isEmpty {
             path.removeLast()
         } else if presentingSheet != nil {
