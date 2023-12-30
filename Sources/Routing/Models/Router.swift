@@ -9,6 +9,9 @@ public class Router<Destination: Route>: ObservableObject {
     @Published var presentingFullScreenCover: Destination?
     /// Used by presented Router instances to dismiss themselves
     @Published var isPresented: Binding<Destination?>
+    var isPresenting: Bool {
+        presentingSheet != nil || presentingFullScreenCover != nil
+    }
     
     init(isPresented: Binding<Destination?>) {
         self.isPresented = isPresented
