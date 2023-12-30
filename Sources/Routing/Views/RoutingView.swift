@@ -4,7 +4,7 @@ public struct RoutingView<Content: View, Destination: Route>: View {
     @StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
     private let rootContent: (Router<Destination>) -> Content
     
-    init(_ routeType: Destination.Type, @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
+    public init(_ routeType: Destination.Type, @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
         self.rootContent = content
     }
     
