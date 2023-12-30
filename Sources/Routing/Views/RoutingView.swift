@@ -3,15 +3,15 @@ import SwiftUI
 struct RouterView<Content: View, Destination: Route>: View {
     @StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
     // Holds our root view content
-    private let content: (Router<Destination>) -> Content
+    private let rootContent: (Router<Destination>) -> Content
     
     init(_ routeType: Destination.Type, @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
-        self.content = content
+        self.rootContent = content
     }
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            content(router)
+            rootContent(router)
                 .navigationDestination(for: Destination.self) { route in
                     router.view(for: route)
                 }
