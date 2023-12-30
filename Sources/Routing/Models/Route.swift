@@ -1,6 +1,5 @@
 import SwiftUI
 
-// Represents the different ways we can navigate to a view
 enum RouteType {
     case push
     case sheet
