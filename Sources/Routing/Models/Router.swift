@@ -1,6 +1,6 @@
 import SwiftUI
 
-class Router<Destination: Route>: ObservableObject {
+public class Router<Destination: Route>: ObservableObject {
     // Used to programatically control a navigation stack
     @Published var path: NavigationPath = NavigationPath()
     // Used to present a view using a sheet

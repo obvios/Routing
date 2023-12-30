@@ -1,12 +1,12 @@
 import SwiftUI
 
-enum RouteType {
+public enum RouteType {
     case push
     case sheet
     case fullScreenCover
 }
 
-protocol Route: Hashable, Identifiable {
+public protocol Route: Hashable, Identifiable {
     associatedtype ViewType: View
     var id: UUID { get }
     var navigationType: RouteType { get }
