@@ -79,7 +79,7 @@ struct RootView: View {
 ```
 
 3. Use the `Router` functions from any of your views. Here is `ViewA` which is pushed onto the navigation stack by `RootView`.
-```
+```swift
 struct ViewA: View {
     @StateObject var router: Router<ExampleRoute>
     
