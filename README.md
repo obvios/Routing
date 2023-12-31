@@ -1,5 +1,5 @@
 <p align="center">
-  <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingIcon.png" style="width:200px; height:200px;">
+  <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingIcon.png">
 </p>
 
 # Routing
