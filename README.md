@@ -89,7 +89,7 @@ struct ViewA: View {
     
     var body: some View {
         Text("View A")
-        Button("Route to ViewC") {
+        Button("ViewC") {
             router.routeTo(.viewC)
         }
         Button("Dismiss") {
