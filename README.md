@@ -1,9 +1,6 @@
 <p align="center">
   <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingIcon.png">
 </p>
-
-# Routing
-
 ## Description
 `Routing` is a library for separating navigation logic from SwiftUI views.
 
