@@ -98,3 +98,4 @@ struct ViewA: View {
     }
 }
 ```
+![Routing Demo](Assets/RoutingDemo.gif)
