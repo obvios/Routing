@@ -1,3 +1,7 @@
+<p align="center">
+  <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingIcon.png">
+</p>
+
 # Routing
 
 ## Description
@@ -98,4 +102,6 @@ struct ViewA: View {
     }
 }
 ```
-![Routing Demo](Assets/RoutingDemo.gif)
+<p align="center">
+  <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingDemo.gif">
+</p>
