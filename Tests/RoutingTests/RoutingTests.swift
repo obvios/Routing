@@ -16,7 +16,16 @@ final class RoutingTests: XCTestCase {
     }
     
     func testPush() {
+        router.routeTo(.viewA)
         
+        XCTAssertEqual(router.path.count, 1)
+    }
+    
+    func testDismissFromPush() {
+        router.routeTo(.viewA)
+        router.dismiss()
+        
+        XCTAssertEqual(router.path.count, 0)
     }
 }
 
