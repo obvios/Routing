@@ -3,6 +3,18 @@ import SwiftUI
 @testable import Routing
 
 final class RoutingTests: XCTestCase {
+    private var router: Router<TestRoute>!
+    
+    override func setUp() {
+        super.setUp()
+        router = Router(isPresented: .constant(.none))
+    }
+    
+    override func tearDown() {
+        router = nil
+        super.tearDown()
+    }
+    
     func testPush() {
         
     }
