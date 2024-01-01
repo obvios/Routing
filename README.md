@@ -8,6 +8,20 @@
 - De-couples navigation logic from SwiftUI views.
 - Leads to better separation of concerns
 
+## Requirements
+- Requires iOS 16 or later.
+
+## Installation
+
+You can install `Routing` using the Swift Package Manager.
+
+1. In Xcode, select "File" > "Add Packages...".
+2. Copy & paste the following into the "Search or Enter Package URL" search bar.
+```
+https://github.com/obvios/Routing.git
+```
+4. Xcode will fetch the repository & the "Routing" library will be added to your project.
+
 ## Getting Started
 1. Create a `Routable` conforming `Enum` to represent the different views you wish to route to.
 ```swift
