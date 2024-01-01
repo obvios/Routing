@@ -117,3 +117,8 @@ struct ViewA: View {
 <p align="center">
   <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingDemo.gif">
 </p>
+
+## Additional Resources
+The below articles are a series explaining the Router pattern and docment the progress of this library.
+- [Learn about the Router pattern for SwiftUI navigation](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation)
+- [See how presentation was added](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation-sheets-and-full-screen-covers)
