@@ -27,6 +27,32 @@ final class RoutingTests: XCTestCase {
         
         XCTAssertEqual(router.path.count, 0)
     }
+    
+    func testPresentSheet() {
+        router.routeTo(.viewB)
+        
+        XCTAssertNotNil(router.presentingSheet)
+    }
+    
+    func testDismissSheet() {
+        router.routeTo(.viewB)
+        router.dismiss()
+        
+        XCTAssertNil(router.presentingSheet)
+    }
+    
+    func testPresentFullScreenCover() {
+        router.routeTo(.viewC)
+        
+        XCTAssertNotNil(router.presentingFullScreenCover)
+    }
+    
+    func testDismissFullScreenCover() {
+        router.routeTo(.viewC)
+        router.dismiss()
+        
+        XCTAssertNil(router.presentingFullScreenCover)
+    }
 }
 
 fileprivate enum TestRoute: Routable {
