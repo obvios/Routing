@@ -119,6 +119,6 @@ struct ViewA: View {
 </p>
 
 ## Additional Resources
-The below articles are a series explaining the Router pattern and docment the progress of this library.
+The below articles are a blog series explaining the `Router` pattern and documents the progress of this library.
 - [Learn about the Router pattern for SwiftUI navigation](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation)
 - [See how presentation was added](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation-sheets-and-full-screen-covers)
