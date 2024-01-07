@@ -8,13 +8,12 @@ public enum NavigationType {
 
 public protocol Routable: Hashable, Identifiable {
     associatedtype ViewType: View
-    var id: UUID { get }
     var navigationType: NavigationType { get }
     func viewToDisplay(router: Router<Self>) -> ViewType
 }
 
 extension Routable {
-    public var id: UUID { .init() }
+    public var id: Self { self }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
