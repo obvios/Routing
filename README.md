@@ -123,3 +123,35 @@ The below articles are from my blog series explaining the `Router` pattern and d
 - [Learn about the Router pattern for SwiftUI navigation](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation)
 - [See how presentation was added](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation-sheets-and-full-screen-covers)
 - [Blog post explaining this Routing library](https://www.curiousalgorithm.com/post/routing-library-for-swiftui-navigation)
+
+## Current Limitations
+
+- Using the Router in Different Tabs: Each tab should embed its own `RoutingView` instance to manage navigation independently within that tab.
+
+To ensure proper navigation behavior in a multi-tab environment, structure your application like this:
+
+```swift
+import SwiftUI
+import Routing
+
+struct MainTabView: View {
+    var body: some View {
+        TabView {
+            RoutingView(ExampleRouteA.self) { router in
+                RootViewA(router: router)
+            }
+            .tabItem {
+                Label("Tab 1", systemImage: "house")
+            }
+
+            RoutingView(ExampleRouteB.self) { router in
+                RootViewB(router: router)
+            }
+            .tabItem {
+                Label("Tab 2", systemImage: "gear")
+            }
+        }
+    }
+}
+
+```
