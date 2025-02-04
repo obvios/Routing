@@ -34,9 +34,14 @@ public class Router<Destination: Routable>: ObservableObject {
         }
     }
     
-    // Pop to the root screen in our hierarchy
+    /// Pop to the root screen. Removes all views from navigation stack
     public func popToRoot() {
         path.removeLast(path.count)
+    }
+    
+    /// Replaces entire navigation stack `path` with new stack path.
+    public func replaceNavigationStack(with newStack: [Destination]) {
+        path = .init(newStack)
     }
     
     // Dismisses presented screen or self
