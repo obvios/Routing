@@ -29,4 +29,3 @@ struct DeepLinkModifier<Destination: Routable>: ViewModifier {
             }
     }
 }
-
