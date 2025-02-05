@@ -155,6 +155,7 @@ struct ContentView: View {
         }
     }
 }
+```
 
 ## Additional Resources
 The below articles are from my blog series explaining the `Router` pattern and documents the progress of this library.
