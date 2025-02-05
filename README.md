@@ -6,7 +6,22 @@
 `Routing` is a library for separating navigation logic from SwiftUI views.
 
 - De-couples navigation logic from SwiftUI views.
-- Leads to better separation of concerns
+- Leads to better separation of concerns.
+
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+  - [Defining a Routable Enum](#defining-a-routable-enum)
+  - [Using RoutingView](#using-routingview)
+  - [Navigating Between Views](#navigating-between-views)
+- [Deep Linking Support](#deep-linking-support)
+  - [Usage](#usage)
+  - [Testing](#testing)
+- [Additional Resources](#additional-resources)
+- [Current Limitations](#current-limitations)
+
 
 ## Requirements
 - Requires iOS 16 or later.
