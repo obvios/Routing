@@ -7,14 +7,8 @@
 
 import SwiftUI
 
-extension View {
-    func onDeepLink<Destination: Routable>(_ handleDeepLink: @escaping (URL) -> Destination?) -> some View {
-        self.modifier(DeepLinkModifier(handleDeepLink: handleDeepLink))
-    }
-}
-
 struct DeepLinkModifier<Destination: Routable>: ViewModifier {
-    @EnvironmentObject var router: Router<Destination>
+    let router: Router<Destination>
     let handleDeepLink: (URL) -> Destination?
 
     func body(content: Content) -> some View {
