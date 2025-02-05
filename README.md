@@ -118,6 +118,29 @@ struct ViewA: View {
   <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingDemo.gif">
 </p>
 
+## Deep Linking Support
+
+`Routing` provides support for deep linking using the `.onDeepLink(using:_:)` modifier. This allows clients to handle incoming URLs and navigate to the appropriate `Routable` destination.
+
+### Usage
+
+Attach `.onDeepLink(using:_:)` to any view inside `RoutingView` to handle deep links:
+
+```swift
+struct ContentView: View {
+    var body: some View {
+        RoutingView(ExampleRoute.self) { router in
+            ViewA(router: router)
+                .onDeepLink(using: router) { url in
+                    // Add your logic to handle deeplink here
+                    print(url)
+                    // Return the Routable destination to navigate to
+                    return ExampleRoute.viewC
+                }
+        }
+    }
+}
+
 ## Additional Resources
 The below articles are from my blog series explaining the `Router` pattern and documents the progress of this library.
 - [Learn about the Router pattern for SwiftUI navigation](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation)
