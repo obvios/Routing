@@ -13,12 +13,7 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
-  - [Defining a Routable Enum](#defining-a-routable-enum)
-  - [Using RoutingView](#using-routingview)
-  - [Navigating Between Views](#navigating-between-views)
 - [Deep Linking Support](#deep-linking-support)
-  - [Usage](#usage)
-  - [Testing](#testing)
 - [Additional Resources](#additional-resources)
 - [Current Limitations](#current-limitations)
 
