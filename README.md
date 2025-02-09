@@ -15,7 +15,7 @@
 - [Getting Started](#getting-started)
 - [Deep Linking Support](#deep-linking-support)
 - [Additional Resources](#additional-resources)
-- [Current Limitations](#current-limitations)
+- [Usage With TabView](#usage-with-tabview)
 
 
 ## Requirements
@@ -158,7 +158,7 @@ The below articles are from my blog series explaining the `Router` pattern and d
 - [See how presentation was added](https://www.curiousalgorithm.com/post/router-pattern-for-swiftui-navigation-sheets-and-full-screen-covers)
 - [Blog post explaining this Routing library](https://www.curiousalgorithm.com/post/routing-library-for-swiftui-navigation)
 
-## Current Limitations
+## Usage with TabView
 
 - Using the Router in Different Tabs: Each tab should embed its own `RoutingView` instance to manage navigation independently within that tab.
 
