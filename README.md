@@ -130,7 +130,7 @@ struct ViewA: View {
 
 ## Deep Linking Support
 
-`Routing` provides support for deep linking using the `.onDeepLink(using:_:)` modifier. This allows clients to handle incoming URLs and navigate to the appropriate `Routable` destination.
+`Routing` provides support for deep linking using the `.onDeepLink(using:_:)` modifier. This allows clients to handle incoming URLs and navigate to the appropriate `Routable` destination. NOTE: The library will dismiss any sheets/fullScreenCovers automatically if needed.
 
 ### Usage
 
@@ -140,11 +140,11 @@ Attach `.onDeepLink(using:_:)` to any view inside `RoutingView` to handle deep l
 struct ContentView: View {
     var body: some View {
         RoutingView(ExampleRoute.self) { router in
-            ViewA(router: router)
+            RootView(router: router)
                 .onDeepLink(using: router) { url in
                     // Add your logic to handle deeplink here
                     print(url)
-                    // Return the Routable destination to navigate to
+                    // Return the destination to navigate to for the deeplink
                     return ExampleRoute.viewC
                 }
         }
