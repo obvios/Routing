@@ -137,6 +137,8 @@ struct ViewA: View {
 Attach `.onDeepLink(using:_:)` to any view inside `RoutingView` to handle deep links:
 
 ```swift
+import Routing
+
 struct ContentView: View {
     var body: some View {
         RoutingView(ExampleRoute.self) { router in
