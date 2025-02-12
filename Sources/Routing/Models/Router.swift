@@ -44,7 +44,7 @@ public class Router<Destination: Routable>: ObservableObject {
         path = .init(newStack)
     }
     
-    /// Dismisses presented view or self
+    /// Dismisses pushed/presented view or self
     public func dismiss() {
         if presentingSheet != nil {
             presentingSheet = nil
