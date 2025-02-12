@@ -44,16 +44,16 @@ public class Router<Destination: Routable>: ObservableObject {
         path = .init(newStack)
     }
     
-    // Dismisses presented screen or self
+    /// Dismisses presented view or self
     public func dismiss() {
-        if !path.isEmpty {
-            path.removeLast()
-        } else if presentingSheet != nil {
+        if presentingSheet != nil {
             presentingSheet = nil
         } else if presentingFullScreenCover != nil {
             presentingFullScreenCover = nil
-        } else {
+        } else if isPresented.wrappedValue != nil {
             isPresented.wrappedValue = nil
+        } else if !path.isEmpty {
+            path.removeLast()
         }
     }
     

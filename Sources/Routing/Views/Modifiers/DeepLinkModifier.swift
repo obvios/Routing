@@ -16,10 +16,7 @@ struct DeepLinkModifier<Destination: Routable>: ViewModifier {
             .onOpenURL { url in
                 if let destination = handleDeepLink(url) {
                     // Dismiss active modals before routing
-                    if router.presentingSheet != nil {
-                        router.dismiss()
-                    }
-                    if router.presentingFullScreenCover != nil {
+                    if router.isPresenting || router.isPresented.wrappedValue != nil {
                         router.dismiss()
                     }
 
