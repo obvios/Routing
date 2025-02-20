@@ -10,6 +10,15 @@ public struct RoutingView<Content: View, Destination: Routable>: View where Dest
         self.rootContent = content
     }
     
+    /// Use when presented, gets binding with parent router
+    private init(_ router: Router<Destination>,
+                presentationType: NavigationType,
+                @ViewBuilder content: @escaping (Router<Destination>) -> Content,
+                handleDeepLink: ((URL) -> Destination?)? = nil) {
+        _router = .init(wrappedValue: router.router(routeType: presentationType))
+        self.rootContent = content
+    }
+    
     public var body: some View {
         NavigationStack(path: $router.path) {
             rootContent(router)
@@ -18,13 +27,13 @@ public struct RoutingView<Content: View, Destination: Routable>: View where Dest
                 }
         }
         .sheet(item: $router.presentingSheet) { route in
-            RoutingView(Destination.self) { router in
-                router.view(for: route)
+            RoutingView(router, presentationType: .sheet) { childRouter in
+                router.view(for: route, using: childRouter)
             }
         }
         .fullScreenCover(item: $router.presentingFullScreenCover) { route in
-            RoutingView(Destination.self) { router in
-                router.view(for: route)
+            RoutingView(router, presentationType: .fullScreenCover) { childRouter in
+                router.view(for: route, using: childRouter)
             }
         }
     }

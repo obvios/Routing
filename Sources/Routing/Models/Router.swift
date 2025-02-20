@@ -22,6 +22,12 @@ public class Router<Destination: Routable>: ObservableObject {
         route.viewToDisplay(router: router(routeType: route.navigationType))
     }
     
+    /// Returns the view associated with the specified `Routable`.
+    /// Used when a child Router is being provided.
+    @ViewBuilder func view(for route: Destination, using router: Router<Destination>) -> Destination.ViewType {
+        route.viewToDisplay(router: router)
+    }
+    
     /// Routes to the specified `Routable`.
     public func routeTo(_ route: Destination) {
         switch route.navigationType {
@@ -69,9 +75,9 @@ public class Router<Destination: Routable>: ObservableObject {
         self.presentingFullScreenCover = route
     }
     
-    // Return the appropriate Router instance based
-    // on `NavigationType`
-    private func router(routeType: NavigationType) -> Router {
+    /// Returns the appropriate Router instance based
+    /// on `NavigationType`
+    func router(routeType: NavigationType) -> Router {
         switch routeType {
         case .push:
             return self
