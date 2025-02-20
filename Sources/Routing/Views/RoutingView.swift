@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct RoutingView<Content: View, Destination: Routable>: View {
+public struct RoutingView<Content: View, Destination: Routable>: View where Destination.ViewType == Content {
     @StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
     private let rootContent: (Router<Destination>) -> Content
     
@@ -18,10 +18,14 @@ public struct RoutingView<Content: View, Destination: Routable>: View {
                 }
         }
         .sheet(item: $router.presentingSheet) { route in
+            RoutingView(Destination.self) { router in
                 router.view(for: route)
+            }
         }
         .fullScreenCover(item: $router.presentingFullScreenCover) { route in
+            RoutingView(Destination.self) { router in
                 router.view(for: route)
+            }
         }
     }
 }
