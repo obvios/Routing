@@ -5,16 +5,14 @@ public struct RoutingView<Content: View, Destination: Routable>: View where Dest
     private let rootContent: (Router<Destination>) -> Content
     
     public init(_ routeType: Destination.Type,
-                @ViewBuilder content: @escaping (Router<Destination>) -> Content,
-                handleDeepLink: ((URL) -> Destination?)? = nil) {
+                @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
         self.rootContent = content
     }
     
     /// Use when presented, gets binding with parent router
     private init(_ router: Router<Destination>,
                 presentationType: NavigationType,
-                @ViewBuilder content: @escaping (Router<Destination>) -> Content,
-                handleDeepLink: ((URL) -> Destination?)? = nil) {
+                @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
         _router = .init(wrappedValue: router.router(routeType: presentationType))
         self.rootContent = content
     }
