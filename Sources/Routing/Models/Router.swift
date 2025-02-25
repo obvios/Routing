@@ -1,5 +1,6 @@
 import SwiftUI
 
+// MARK: - Router (Core)
 public class Router<Destination: Routable>: ObservableObject {
     /// Used to programatically control a navigation stack
     @Published var path: NavigationPath = NavigationPath()
@@ -10,6 +11,23 @@ public class Router<Destination: Routable>: ObservableObject {
     /// Used by presented Router instances to dismiss themselves
     @Published var isPresented: Binding<Destination?>
     
+    /// Indicates whether a modal or full-screen presentation is currently active.
+    ///
+    /// This computed property returns `true` if either a **sheet** or a **full-screen cover**
+    /// is currently being presented, meaning the user is viewing a modal screen.
+    ///
+    /// - Returns: `true` if a sheet or full-screen cover is currently being displayed, otherwise `false`.
+    ///
+    /// ### Example Usage:
+    /// ```swift
+    /// let router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///
+    /// if router.isPresenting {
+    ///     print("A modal is currently being presented")
+    /// } else {
+    ///     print("No modals are active")
+    /// }
+    /// ```
     public var isPresenting: Bool {
         presentingSheet != nil || presentingFullScreenCover != nil
     }
@@ -19,8 +37,27 @@ public class Router<Destination: Routable>: ObservableObject {
     }
 }
 
+// MARK: - View Handling
 extension Router {
-    /// Call this to start a `RoutingView` with the root view of your routing hierarchy.
+    /// Returns the initial view for a `RoutingView` based on the provided `Destination`.
+    ///
+    /// This method is used to set up the **root view** for a `RoutingView` by returning the corresponding
+    /// SwiftUI `View` associated with the given `Destination`. It ensures that the view is properly configured
+    /// with the router instance, enabling navigation actions within the routing hierarchy.
+    ///
+    /// - Parameter route: The initial `Destination` that defines the view to be displayed.
+    /// - Returns: The SwiftUI `View` associated with the specified `Destination`, wrapped in `@ViewBuilder`.
+    ///
+    /// ### Example Usage:
+    /// ```swift
+    /// struct ContentView: View {
+    ///     var body: some View {
+    ///         RoutingView(ExampleRoute.self) { router in
+    ///             router.start(.home) // Sets the initial view for RoutingView
+    ///         }
+    ///     }
+    /// }
+    /// ```
     @ViewBuilder public func start(_ route: Destination) -> Destination.ViewType {
         route.viewToDisplay(router: self)
     }
@@ -57,6 +94,7 @@ extension Router {
     }
 }
 
+// MARK: - Navigation Functions
 extension Router {
     /// Routes to the specified `Routable`.
     public func routeTo(_ route: Destination) {
