@@ -14,7 +14,7 @@ public struct RoutingView<Content: View, Destination: Routable>: View where Dest
         NavigationStack(path: $router.path) {
             rootContent(router)
                 .navigationDestination(for: Destination.self) { route in
-                    router.view(for: route)
+                    router.start(route)
                 }
         }
         .sheet(item: $router.presentingSheet) { route in

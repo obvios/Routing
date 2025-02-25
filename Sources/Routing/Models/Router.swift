@@ -22,11 +22,6 @@ public class Router<Destination: Routable>: ObservableObject {
         route.viewToDisplay(router: self)
     }
     
-    // Returns the view associated with the specified `Routable`
-    @ViewBuilder func view(for route: Destination) -> Destination.ViewType {
-        route.viewToDisplay(router: router(routeType: route.navigationType))
-    }
-    
     /// Returns the view associated with the specified `Routable`.
     /// Used when a child Router is being provided.
     @ViewBuilder func view(for route: Destination, using router: Router<Destination>) -> Destination.ViewType {
