@@ -77,7 +77,7 @@ public class Router<Destination: Routable>: ObservableObject {
     
     /// Returns the appropriate Router instance based
     /// on `NavigationType`
-    func router(routeType: NavigationType) -> Router {
+    func routerFor(routeType: NavigationType) -> Router {
         switch routeType {
         case .push:
             return self
