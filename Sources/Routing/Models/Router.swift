@@ -17,8 +17,13 @@ public class Router<Destination: Routable>: ObservableObject {
         self.isPresented = isPresented
     }
     
-    /// Returns the view associated with the specified `Routable`
-    @ViewBuilder public func view(for route: Destination) -> Destination.ViewType {
+    /// Call this to start a `RoutingView` with the root view of your routing hierarchy.
+    @ViewBuilder public func start(_ route: Destination) -> Destination.ViewType {
+        route.viewToDisplay(router: self)
+    }
+    
+    // Returns the view associated with the specified `Routable`
+    @ViewBuilder func view(for route: Destination) -> Destination.ViewType {
         route.viewToDisplay(router: router(routeType: route.navigationType))
     }
     

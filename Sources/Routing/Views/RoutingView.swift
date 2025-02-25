@@ -1,11 +1,12 @@
 import SwiftUI
 
 public struct RoutingView<Content: View, Destination: Routable>: View where Destination.ViewType == Content {
-    @StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
+    @ObservedObject var router: Router<Destination>
     private let rootContent: (Router<Destination>) -> Content
     
-    public init(_ routeType: Destination.Type,
+    public init(_ router: Router<Destination>,
                 @ViewBuilder content: @escaping (Router<Destination>) -> Content) {
+        self.router = router
         self.rootContent = content
     }
     
