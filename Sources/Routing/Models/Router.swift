@@ -108,7 +108,34 @@ extension Router {
         }
     }
     
-    /// Pop to the root screen. Removes all views from navigation stack
+    /// Pops the top view from the navigation stack.
+    ///
+    /// This method removes the most recently pushed view from the `NavigationPath`,
+    /// effectively navigating **back one screen** in the navigation hierarchy.
+    ///
+    /// If the navigation stack is **not empty**, the last view is removed.
+    /// If the stack is already empty, calling this method has no effect.
+    ///
+    /// - Note: This method only affects **push-based navigation** and does not dismiss modals.
+    ///
+    /// ### Example Usage:
+    /// ```swift
+    /// struct ViewA: View {
+    ///     // . . .
+    ///     var body: some View {
+    ///        Button("Go Back") {
+    ///             router.pop() // Navigates back one screen
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    public func pop() {
+        if !path.isEmpty {
+            path.removeLast()
+        }
+    }
+    
+    /// Pop to the root screen. Removes all views from navigation stack.
     public func popToRoot() {
         path.removeLast(path.count)
     }
@@ -118,7 +145,30 @@ extension Router {
         path = .init(newStack)
     }
     
-    /// Dismisses pushed/presented view or self
+    /// Dismisses the currently presented modal.
+    ///
+    /// This method checks and dismisses the currently active presentation in the following order:
+    /// 1. If a **sheet** (`presentingSheet`) is presented, it is dismissed.
+    /// 2. If a **full-screen cover** (`presentingFullScreenCover`) is presented, it is dismissed.
+    /// 3. If the router itself was presented by a parent, it dismisses itself.
+    ///
+    /// - Note: This method only dismisses **modals and presentations**, not pushed views within the navigation stack.
+    /// To navigate back in the stack, use `pop()` instead.
+    ///
+    /// ### Example Usage:
+    /// ```swift
+    /// struct ContentView: View {
+    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             Button("Close") {
+    ///                 router.dismiss() // Dismisses the current modal or presentation
+    ///             }
+    ///         }
+    ///     }
+    /// }
+    /// ```
     public func dismiss() {
         if presentingSheet != nil {
             presentingSheet = nil
@@ -126,8 +176,6 @@ extension Router {
             presentingFullScreenCover = nil
         } else if isPresented.wrappedValue != nil {
             isPresented.wrappedValue = nil
-        } else if !path.isEmpty {
-            path.removeLast()
         }
     }
     
