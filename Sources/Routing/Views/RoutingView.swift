@@ -19,12 +19,12 @@ public struct RoutingView<Content: View, Destination: Routable>: View where Dest
         }
         .sheet(item: $router.presentingSheet) { route in
             RoutingView(router.router(routeType: .sheet)) { childRouter in
-                router.view(for: route, using: childRouter)
+                childRouter.start(route)
             }
         }
         .fullScreenCover(item: $router.presentingFullScreenCover) { route in
             RoutingView(router.router(routeType: .fullScreenCover)) { childRouter in
-                router.view(for: route, using: childRouter)
+                childRouter.start(route)
             }
         }
     }
