@@ -2,13 +2,13 @@ import SwiftUI
 
 public class Router<Destination: Routable>: ObservableObject {
     /// Used to programatically control a navigation stack
-    @Published public var path: NavigationPath = NavigationPath()
+    @Published var path: NavigationPath = NavigationPath()
     /// Used to present a view using a sheet
-    @Published public var presentingSheet: Destination?
+    @Published var presentingSheet: Destination?
     /// Used to present a view using a full screen cover
-    @Published public var presentingFullScreenCover: Destination?
+    @Published var presentingFullScreenCover: Destination?
     /// Used by presented Router instances to dismiss themselves
-    @Published public var isPresented: Binding<Destination?>
+    @Published var isPresented: Binding<Destination?>
     public var isPresenting: Bool {
         presentingSheet != nil || presentingFullScreenCover != nil
     }
