@@ -9,6 +9,7 @@ public class Router<Destination: Routable>: ObservableObject {
     @Published var presentingFullScreenCover: Destination?
     /// Used by presented Router instances to dismiss themselves
     @Published var isPresented: Binding<Destination?>
+    
     public var isPresenting: Bool {
         presentingSheet != nil || presentingFullScreenCover != nil
     }
@@ -16,7 +17,9 @@ public class Router<Destination: Routable>: ObservableObject {
     public init(isPresented: Binding<Destination?>) {
         self.isPresented = isPresented
     }
-    
+}
+
+extension Router {
     /// Call this to start a `RoutingView` with the root view of your routing hierarchy.
     @ViewBuilder public func start(_ route: Destination) -> Destination.ViewType {
         route.viewToDisplay(router: self)
@@ -27,7 +30,34 @@ public class Router<Destination: Routable>: ObservableObject {
     @ViewBuilder func view(for route: Destination, using router: Router<Destination>) -> Destination.ViewType {
         route.viewToDisplay(router: router)
     }
-    
+}
+
+extension Router {
+    /// Returns the appropriate Router instance based
+    /// on `NavigationType`
+    func routerFor(routeType: NavigationType) -> Router {
+        switch routeType {
+        case .push:
+            return self
+        case .sheet:
+            return Router(
+                isPresented: Binding(
+                    get: { self.presentingSheet },
+                    set: { self.presentingSheet = $0 }
+                )
+            )
+        case .fullScreenCover:
+            return Router(
+                isPresented: Binding(
+                    get: { self.presentingFullScreenCover },
+                    set: { self.presentingFullScreenCover = $0 }
+                )
+            )
+        }
+    }
+}
+
+extension Router {
     /// Routes to the specified `Routable`.
     public func routeTo(_ route: Destination) {
         switch route.navigationType {
@@ -73,28 +103,5 @@ public class Router<Destination: Routable>: ObservableObject {
     
     private func presentFullScreen(_ route: Destination) {
         self.presentingFullScreenCover = route
-    }
-    
-    /// Returns the appropriate Router instance based
-    /// on `NavigationType`
-    func routerFor(routeType: NavigationType) -> Router {
-        switch routeType {
-        case .push:
-            return self
-        case .sheet:
-            return Router(
-                isPresented: Binding(
-                    get: { self.presentingSheet },
-                    set: { self.presentingSheet = $0 }
-                )
-            )
-        case .fullScreenCover:
-            return Router(
-                isPresented: Binding(
-                    get: { self.presentingFullScreenCover },
-                    set: { self.presentingFullScreenCover = $0 }
-                )
-            )
-        }
     }
 }
