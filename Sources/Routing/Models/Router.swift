@@ -97,8 +97,8 @@ extension Router {
 // MARK: - Navigation Functions
 extension Router {
     /// Routes to the specified `Routable`.
-    public func routeTo(_ route: Destination) {
-        switch route.navigationType {
+    public func routeTo(_ route: Destination, via navigationType: NavigationType) {
+        switch navigationType {
         case .push:
             push(route)
         case .sheet:

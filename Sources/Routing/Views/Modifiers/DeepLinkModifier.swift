@@ -21,7 +21,7 @@ struct DeepLinkModifier<Destination: Routable>: ViewModifier {
                     }
 
                     // Navigate to the deep link destination
-                    router.routeTo(destination)
+                    router.routeTo(destination, via: .sheet)
                 }
             }
     }
