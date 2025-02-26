@@ -96,7 +96,37 @@ extension Router {
 
 // MARK: - Navigation Functions
 extension Router {
-    /// Routes to the specified `Routable`.
+    /// Routes to the specified `Destination` using the given `NavigationType`.
+    ///
+    /// - Parameters:
+    ///   - route: The `Destination` to navigate to.
+    ///   - navigationType: The `NavigationType` to use for presenting the destination.
+    ///      - `.push` → Pushes the destination onto the navigation stack.
+    ///      - `.sheet` → Presents the destination as a modal sheet.
+    ///      - `.fullScreenCover` → Presents the destination as a full-screen cover.
+    ///
+    /// ### Example Usage:
+    /// ```swift
+    /// struct ContentView: View {
+    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             Button("Go to Details (Push)") {
+    ///                 router.routeTo(.details(id: "123"), via: .push) // Pushes onto the navigation stack
+    ///             }
+    ///
+    ///             Button("Go to Settings (Sheet)") {
+    ///                 router.routeTo(.settings, via: .sheet) // Presents as a sheet
+    ///             }
+    ///
+    ///             Button("Go to Profile (Full Screen)") {
+    ///                 router.routeTo(.profile, via: .fullScreenCover) // Presents as full-screen
+    ///             }
+    ///         }
+    ///     }
+    /// }
+    /// ```
     public func routeTo(_ route: Destination, via navigationType: NavigationType) {
         switch navigationType {
         case .push:
