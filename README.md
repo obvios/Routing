@@ -2,6 +2,8 @@
   <img src="https://github.com/obvios/Routing/blob/main/Assets/RoutingIcon.png" style="width: 80%; height: auto;">
 </p>
 
+# Routing 2.0.1
+
 ## Description
 `Routing` is a SwiftUI library that decouples navigation logic from views, promoting separation of concerns, improved maintainability, and flexible programmatic navigation.
 
