@@ -145,12 +145,11 @@ extension Router {
         path = .init(newStack)
     }
     
-    /// Dismisses the currently presented modal.
+    /// Dismisses the currently presented child modal (sheet or full-screen cover).
     ///
     /// This method checks and dismisses the currently active presentation in the following order:
-    /// 1. If a **sheet** (`presentingSheet`) is presented, it is dismissed.
-    /// 2. If a **full-screen cover** (`presentingFullScreenCover`) is presented, it is dismissed.
-    /// 3. If the router itself was presented by a parent, it dismisses itself.
+    /// 1. If a **sheet**  is presented, it is dismissed.
+    /// 2. If a **full-screen cover** is presented, it is dismissed.
     ///
     /// - Note: This method only dismisses **modals and presentations**, not pushed views within the navigation stack.
     /// To navigate back in the stack, use `pop()` instead.
@@ -169,14 +168,38 @@ extension Router {
     ///     }
     /// }
     /// ```
-    public func dismiss() {
+    public func dismissChild() {
         if presentingSheet != nil {
             presentingSheet = nil
         } else if presentingFullScreenCover != nil {
             presentingFullScreenCover = nil
-        } else if isPresented.wrappedValue != nil {
-            isPresented.wrappedValue = nil
         }
+    }
+    
+    /// Dismisses the router itself if it was presented by a parent.
+    ///
+    /// Calling this method will result in the entire view hierarchy managed by this instance to be dismissed.
+    /// This results in the view hierarchy returning to the previous `Router`'s one.
+    ///
+    /// - Note: This method does **not** dismiss presented sheets or full-screen covers.
+    /// Use `dismissChild()` to dismiss child presentations.
+    ///
+    /// ### Example Usage:
+    /// ```swift
+    /// struct ContentView: View {
+    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             Button("Close Self") {
+    ///                 router.dismissSelf() // Requests the parent to dismiss this router
+    ///             }
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    public func dismissSelf() {
+        isPresented.wrappedValue = nil
     }
     
     private func push(_ appRoute: Destination) {
