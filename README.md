@@ -5,8 +5,8 @@
 ## Description
 `Routing` is a library for separating navigation logic from SwiftUI views.
 
-- De-couples navigation logic from SwiftUI views, improving separation of concerns.
-- Supports better programmatic navigation.
+- Enforces separation of concerns by de-coupling navigation logic from SwiftUI views.
+- Supports flexible programmatic navigation.
 - Type-safe
 
 ## Table of Contents
