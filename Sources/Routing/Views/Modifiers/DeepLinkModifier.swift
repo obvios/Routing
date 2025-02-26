@@ -16,12 +16,12 @@ struct DeepLinkModifier<Destination: Routable>: ViewModifier {
             .onOpenURL { url in
                 if let destination = handleDeepLink(url) {
                     // Dismiss active modals before routing
-                    if router.isPresenting || router.isPresented.wrappedValue != nil {
-                        router.dismiss()
+                    if router.isPresenting {
+                        router.dismissChild()
                     }
 
                     // Navigate to the deep link destination
-                    router.routeTo(destination)
+                    router.routeTo(destination, via: .sheet)
                 }
             }
     }

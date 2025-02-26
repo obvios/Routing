@@ -8,7 +8,6 @@ public enum NavigationType {
 
 public protocol Routable: Hashable, Identifiable {
     associatedtype ViewType: View
-    var navigationType: NavigationType { get }
     func viewToDisplay(router: Router<Self>) -> ViewType
 }
 
