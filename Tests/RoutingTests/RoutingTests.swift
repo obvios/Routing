@@ -16,43 +16,43 @@ final class RoutingTests: XCTestCase {
     }
     
     func testPush() {
-        router.routeTo(.viewA)
+        router.routeTo(.viewA, via: .push)
         
         XCTAssertEqual(router.path.count, 1)
     }
     
     func testDismissFromPush() {
-        router.routeTo(.viewA)
-        router.dismiss()
+        router.routeTo(.viewA, via: .push)
+        router.pop()
         
         XCTAssertEqual(router.path.count, 0)
     }
     
     func testPresentSheet() {
-        router.routeTo(.viewB)
+        router.routeTo(.viewB, via: .sheet)
         
         XCTAssertNotNil(router.presentingSheet)
         XCTAssertTrue(router.isPresenting)
     }
     
     func testDismissSheet() {
-        router.routeTo(.viewB)
-        router.dismiss()
+        router.routeTo(.viewB, via: .sheet)
+        router.dismissChild()
         
         XCTAssertNil(router.presentingSheet)
         XCTAssertFalse(router.isPresenting)
     }
     
     func testPresentFullScreenCover() {
-        router.routeTo(.viewC)
+        router.routeTo(.viewC, via: .fullScreenCover)
         
         XCTAssertNotNil(router.presentingFullScreenCover)
         XCTAssertTrue(router.isPresenting)
     }
     
     func testDismissFullScreenCover() {
-        router.routeTo(.viewC)
-        router.dismiss()
+        router.routeTo(.viewC, via: .fullScreenCover)
+        router.dismissChild()
         
         XCTAssertNil(router.presentingFullScreenCover)
         XCTAssertFalse(router.isPresenting)
@@ -61,9 +61,9 @@ final class RoutingTests: XCTestCase {
     // Ensure non-empty path presenting view dismisses presented view
     // and does not pop path.
     func testPushedPresentedDImmised() {
-        router.routeTo(.viewA)
-        router.routeTo(.viewB)
-        router.dismiss()
+        router.routeTo(.viewA, via: .push)
+        router.routeTo(.viewB, via: .sheet)
+        router.dismissChild()
         
         XCTAssertEqual(router.path.count, 1)
         XCTAssertFalse(router.isPresenting)
