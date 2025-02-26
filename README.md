@@ -41,6 +41,7 @@ import SwiftUI
 import Routing
 
 enum ExampleRoute: Routable {
+    case root
     case viewA
     case viewB(String)
     case viewC
@@ -48,6 +49,8 @@ enum ExampleRoute: Routable {
     @ViewBuilder
     func viewToDisplay(router: Router<ExampleRoute>) -> some View {
         switch self {
+        case .root:
+            RootView(router: router)
         case .viewA:
             ViewA(router: router)
         case .viewB(let description):
@@ -56,72 +59,46 @@ enum ExampleRoute: Routable {
             ViewC(router: router)
         }
     }
-    
-    var navigationType: NavigationType {
-        switch self {
-        case .viewA:
-            return .push
-        case .viewB(_):
-            return .sheet
-        case .viewC:
-            return .fullScreenCover
-        }
-    }
 }
 ```
 
-2. Wrap your view hierarchy in a `RoutingView` that is initialized with your `Routable` enum. It will inject a `Router` instance into your root view.
+2. Add the `RoutingView` to your view hierarchy and inject a `Router` instance.
 ```swift
 import SwiftUI
 import Routing
 
 struct ContentView: View {
-    var body: some View {
-        RoutingView(ExampleRoute.self) { router in
-            RootView(router: router)
-        }
-    }
-}
-
-struct RootView: View {
-    @StateObject var router: Router<ExampleRoute>
-    
-    init(router: Router<ExampleRoute>) {
-        _router = StateObject(wrappedValue: router)
-    }
+    @StateObject var router: Router<ExampleRoute> = .init(isPresented: .constant(.none))
     
     var body: some View {
-        VStack() {
-            Button("View A") {
-                router.routeTo(.viewA)
-            }
-            Button("View B") {
-                router.routeTo(.viewB("Got here from RootView"))
-            }
-            Button("View C") {
-                router.routeTo(.viewC)
-            }
+        RoutingView(router) { _ in
+            router.start(.root)
         }
     }
 }
 ```
 
-3. Use the `Router` functions from any of your views. Here is `ViewA` which is pushed onto the navigation stack by `RootView`.
+3. Use the `Router` functions from any of your views. Here is `ViewA`.
 ```swift
 struct ViewA: View {
-    @StateObject var router: Router<ExampleRoute>
-    
-    init(router: Router<ExampleRoute>) {
-        _router = StateObject(wrappedValue: router)
-    }
+    @ObservedObject var router: Router<ExampleRoute>
     
     var body: some View {
         Text("View A")
-        Button("ViewC") {
-            router.routeTo(.viewC)
+        Button("View A: Push") {
+            router.routeTo(.viewA, via: .push)
         }
-        Button("Dismiss") {
-            router.dismiss()
+        Button("View B: Full screen cover") {
+            router.routeTo(.viewB("Got here from View A"), via: .fullScreenCover)
+        }
+        Button("ViewC: Sheet") {
+            router.routeTo(.viewC, via: .sheet)
+        }
+        Button("Dismiss self") {
+            router.dismissSelf()
+        }
+        Button("Pop back") {
+            router.pop()
         }
     }
 }
@@ -132,25 +109,31 @@ struct ViewA: View {
 
 ## Deep Linking Support
 
-`Routing` provides support for deep linking using the `.onDeepLink(using:_:)` modifier. This allows clients to handle incoming URLs and navigate to the appropriate `Routable` destination. NOTE: The library will dismiss any sheets/fullScreenCovers automatically if needed.
+`Routing` provides support for deep linking using the `.onDeepLink(using:_:)` modifier.
+This allows clients to handle incoming URLs and navigate to the appropriate `Routable` destination.
+NOTE: The library will dismiss any sheets/fullScreenCovers automatically if needed before displaying the deep linked view.
+WARNING: I recommend only adding one `.onDeepLink(using:_:)` modifier at the root of your view hierarchy.
 
 ### Usage
 
-Attach `.onDeepLink(using:_:)` to any view inside `RoutingView` to handle deep links:
+Attach `.onDeepLink(using:_:)` to `RoutingView` to handle deep links:
 
 ```swift
+import SwiftUI
 import Routing
 
 struct ContentView: View {
+    @StateObject var router: Router<ExampleRoute> = .init(isPresented: .constant(.none))
+    
     var body: some View {
-        RoutingView(ExampleRoute.self) { router in
-            RootView(router: router)
-                .onDeepLink(using: router) { url in
-                    // Add your logic to handle deeplink here
-                    print(url)
-                    // Return the destination to navigate to for the deeplink
-                    return ExampleRoute.viewC
-                }
+        RoutingView(router) { _ in
+            router.start(.root)
+        }
+        .onDeepLink(using: router) { url in
+            // Add your logic to handle deep link here
+            print(url)
+            // Return the destination to navigate to for the deep link
+            return .viewC
         }
     }
 }
@@ -164,7 +147,7 @@ The below articles are from my blog series explaining the `Router` pattern and d
 
 ## Usage with TabView
 
-- Using the Router in Different Tabs: Each tab should embed its own `RoutingView` instance to manage navigation independently within that tab.
+- Each tab should embed its own RoutingView instance to ensure navigation is managed independently within that tab. This allows each tab to maintain its own navigation stack while using a shared router for programmatic navigation.
 
 To ensure proper navigation behavior in a multi-tab environment, structure your application like this:
 
@@ -173,17 +156,20 @@ import SwiftUI
 import Routing
 
 struct MainTabView: View {
+    @StateObject var routerA = Router<ExampleRouteA>(isPresented: .constant(nil))
+    @StateObject var routerB = Router<ExampleRouteB>(isPresented: .constant(nil))
+
     var body: some View {
         TabView {
-            RoutingView(ExampleRouteA.self) { router in
-                RootViewA(router: router)
+            RoutingView(routerA) { _ in
+                routerA.start(.rootA) // Sets the starting view for Tab 1
             }
             .tabItem {
                 Label("Tab 1", systemImage: "house")
             }
 
-            RoutingView(ExampleRouteB.self) { router in
-                RootViewB(router: router)
+            RoutingView(routerB) { _ in
+                routerB.start(.rootB) // Sets the starting view for Tab 2
             }
             .tabItem {
                 Label("Tab 2", systemImage: "gear")
@@ -192,9 +178,10 @@ struct MainTabView: View {
     }
 }
 
+
 ```
 
-NOTE: Currently the Router cannot be used to route to views in a different tab. This limitation is due to the original single flow design of the library. I am working to address this in the next version.
+NOTE: Currently the Router cannot be used to route to views in a different tab. This limitation is due to the original single flow design of the library. I am working to address this in future versions.
 
 ## Contributions
 
