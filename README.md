@@ -182,7 +182,7 @@ struct MainTabView: View {
 
 ```
 
-NOTE: Currently the Router cannot be used to route to views in a different tab. This limitation is due to the original single flow design of the library. I am working to address this in future versions.
+NOTE: As you may have noticed, currently the Router cannot be used to route to views contained in a different tab. This limitation is due to the original design of the library. This additional capability is in the works.
 
 ## Contributions
 
