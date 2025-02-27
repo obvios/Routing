@@ -17,6 +17,7 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
+- [Programmatic Navigation](#programmatic-navigation)
 - [Deep Linking Support](#deep-linking-support)
 - [Additional Resources](#additional-resources)
 - [Usage With TabView](#usage-with-tabview)
