@@ -110,6 +110,32 @@ struct ViewA: View {
   <img src = "https://github.com/obvios/Routing/blob/main/Assets/RoutingDemo.gif">
 </p>
 
+## Programmatic navigation
+
+Using the `Router` object you can easily control navigation programatically, here are some examples:
+
+```swift
+// Navigate to a destination using a specific navigation type
+router.routeTo(.details(id: "123"), via: .push)
+router.routeTo(.settings, via: .sheet)
+router.routeTo(.profile, via: .fullScreenCover)
+
+// Pop the last view from the navigation stack
+router.pop()
+
+// Pop to the root view
+router.popToRoot()
+
+// Replace the entire navigation stack
+router.replaceNavigationStack(with: [.home, .profile])
+
+// Dismiss the currently presented modal (sheet or full-screen cover)
+router.dismissChild()
+
+// Dismiss the entire RoutingView instance if it was presented
+router.dismissSelf()
+```
+
 ## Deep Linking Support
 
 `Routing` provides support for deep linking using the `.onDeepLink(using:_:)` modifier.
