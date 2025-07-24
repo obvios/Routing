@@ -39,6 +39,18 @@ public class Router<Destination: Routable>: ObservableObject {
     }
 }
 
+// MARK: - Helper Properties
+extension Router {
+
+    private var rootRouter: Router {
+        var current = self
+        while let parent = current.parentRouter {
+            current = parent
+        }
+        return current
+    }
+}
+
 // MARK: - View Handling
 extension Router {
     /// Returns the initial view for a `RoutingView` based on the provided `Destination`.
@@ -235,7 +247,14 @@ extension Router {
     public func dismissSelf() {
         parentRouter?.dismissChild()
     }
-    
+
+    /// Dismisses entire hierarchy and
+    public func dismissAllFromRoot() {
+        rootRouter.presentingSheet = nil
+        rootRouter.presentingFullScreenCover = nil
+        rootRouter.popToRoot()
+    }
+
     private func push(_ appRoute: Destination) {
         path.append(appRoute)
     }
