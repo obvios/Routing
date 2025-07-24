@@ -10,8 +10,6 @@ public class Router<Destination: Routable>: ObservableObject {
     @Published var presentingFullScreenCover: Destination?
     /// Reference to parent to be able to dismiss
     private weak var parentRouter: Router<Destination>?
-    /// Reference to child Router to be able to reference the last router
-    private var childRouter: Router<Destination>?
 
     /// Indicates whether a modal or full-screen presentation is currently active.
     ///
@@ -91,13 +89,9 @@ extension Router {
         case .push:
             return self
         case .fullScreenCover:
-            let child = Router(parentRouter: self)
-            childRouter = child
-            return child
+            return Router(parentRouter: self)
         case .sheet:
-            let child = Router(parentRouter: self)
-            childRouter = child
-            return child
+            return Router(parentRouter: self)
         }
     }
 }
@@ -219,7 +213,6 @@ extension Router {
         } else if presentingFullScreenCover != nil {
             presentingFullScreenCover = nil
         }
-        childRouter = nil
     }
     
     /// Dismisses the router itself if it was presented by a parent.
