@@ -199,7 +199,7 @@ extension Router {
     ///     var body: some View {
     ///         VStack {
     ///             Button("Close") {
-    ///                 router.dismiss() // Dismisses the current modal or presentation
+    ///                 router.dismissChild() // Dismisses the current modal or presentation
     ///             }
     ///         }
     ///     }
