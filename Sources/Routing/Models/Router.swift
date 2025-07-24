@@ -8,9 +8,11 @@ public class Router<Destination: Routable>: ObservableObject {
     @Published var presentingSheet: Destination?
     /// Used to present a view using a full screen cover
     @Published var presentingFullScreenCover: Destination?
-    /// Used by presented Router instances to dismiss themselves
-    @Published var isPresented: Binding<Destination?>
-    
+    /// Reference to parent to be able to dismiss
+    private weak var parentRouter: Router<Destination>?
+    /// Reference to child Router to be able to reference the last router
+    private var childRouter: Router<Destination>?
+
     /// Indicates whether a modal or full-screen presentation is currently active.
     ///
     /// This computed property returns `true` if either a **sheet** or a **full-screen cover**
@@ -32,8 +34,8 @@ public class Router<Destination: Routable>: ObservableObject {
         presentingSheet != nil || presentingFullScreenCover != nil
     }
     
-    public init(isPresented: Binding<Destination?>) {
-        self.isPresented = isPresented
+    public init(parentRouter: Router<Destination>? = nil) {
+        self.parentRouter = parentRouter
     }
 }
 
@@ -76,20 +78,14 @@ extension Router {
         switch routeType {
         case .push:
             return self
-        case .sheet:
-            return Router(
-                isPresented: Binding(
-                    get: { self.presentingSheet },
-                    set: { self.presentingSheet = $0 }
-                )
-            )
         case .fullScreenCover:
-            return Router(
-                isPresented: Binding(
-                    get: { self.presentingFullScreenCover },
-                    set: { self.presentingFullScreenCover = $0 }
-                )
-            )
+            let child = Router(parentRouter: self)
+            childRouter = child
+            return child
+        case .sheet:
+            let child = Router(parentRouter: self)
+            childRouter = child
+            return child
         }
     }
 }
@@ -211,6 +207,7 @@ extension Router {
         } else if presentingFullScreenCover != nil {
             presentingFullScreenCover = nil
         }
+        childRouter = nil
     }
     
     /// Dismisses the router itself if it was presented by a parent.
@@ -236,7 +233,7 @@ extension Router {
     /// }
     /// ```
     public func dismissSelf() {
-        isPresented.wrappedValue = nil
+        parentRouter?.dismissChild()
     }
     
     private func push(_ appRoute: Destination) {
