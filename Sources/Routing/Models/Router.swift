@@ -138,31 +138,38 @@ extension Router {
         }
     }
     
-    /// Pops the top view from the navigation stack.
+    /// Removes one or more views from the navigation stack.
     ///
-    /// This method removes the most recently pushed view from the `NavigationPath`,
-    /// effectively navigating **back one screen** in the navigation hierarchy.
+    /// This method removes the most recently pushed views from the `NavigationPath`,
+    /// effectively navigating back one or more screens in the navigation hierarchy.
     ///
-    /// If the navigation stack is **not empty**, the last view is removed.
-    /// If the stack is already empty, calling this method has no effect.
+    /// - If the navigation stack is **not empty**, the specified number of views are removed.
+    /// - If the requested number exceeds available views, all remaining views are removed.
+    /// - If the stack is already empty, calling this method has no effect.
+    /// - If a negative value is provided, the method does nothing.
     ///
+    /// - Parameter last: The number of views to pop from the stack. Defaults to 1.
     /// - Note: This method only affects **push-based navigation** and does not dismiss modals.
     ///
     /// ### Example Usage:
     /// ```swift
     /// struct ViewA: View {
-    ///     // . . .
+    ///     @EnvironmentObject var router: Router<AppRoute>
+    ///
     ///     var body: some View {
-    ///        Button("Go Back") {
-    ///             router.pop() // Navigates back one screen
+    ///         VStack {
+    ///             // Go back one screen
+    ///             Button("Back") { router.pop() }
+    ///
+    ///             // Go back three screens (or as many as available)
+    ///             Button("Back to Main") { router.pop(last: 3) }
     ///         }
     ///     }
     /// }
     /// ```
-    public func pop() {
-        if !path.isEmpty {
-            path.removeLast()
-        }
+    public func pop(last: Int = 1) {
+        guard !path.isEmpty else { return }
+        path.removeLast(last)
     }
     
     /// Pop to the root screen. Removes all views from navigation stack.
