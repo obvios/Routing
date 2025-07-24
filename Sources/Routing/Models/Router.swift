@@ -241,7 +241,7 @@ extension Router {
         parentRouter?.dismissChild()
     }
 
-    /// Dismisses entire hierarchy and
+    /// Dismisses entire hierarchy
     public func dismissAllFromRoot() {
         rootRouter.presentingSheet = nil
         rootRouter.presentingFullScreenCover = nil
