@@ -8,9 +8,9 @@ public class Router<Destination: Routable>: ObservableObject {
     @Published var presentingSheet: Destination?
     /// Used to present a view using a full screen cover
     @Published var presentingFullScreenCover: Destination?
-    /// Used by presented Router instances to dismiss themselves
-    @Published var isPresented: Binding<Destination?>
-    
+    /// Reference to parent to be able to dismiss
+    private weak var parentRouter: Router<Destination>?
+
     /// Indicates whether a modal or full-screen presentation is currently active.
     ///
     /// This computed property returns `true` if either a **sheet** or a **full-screen cover**
@@ -32,8 +32,20 @@ public class Router<Destination: Routable>: ObservableObject {
         presentingSheet != nil || presentingFullScreenCover != nil
     }
     
-    public init(isPresented: Binding<Destination?>) {
-        self.isPresented = isPresented
+    public init(parentRouter: Router<Destination>? = nil) {
+        self.parentRouter = parentRouter
+    }
+}
+
+// MARK: - Helper Properties
+extension Router {
+
+    private var rootRouter: Router {
+        var current = self
+        while let parent = current.parentRouter {
+            current = parent
+        }
+        return current
     }
 }
 
@@ -76,20 +88,10 @@ extension Router {
         switch routeType {
         case .push:
             return self
-        case .sheet:
-            return Router(
-                isPresented: Binding(
-                    get: { self.presentingSheet },
-                    set: { self.presentingSheet = $0 }
-                )
-            )
         case .fullScreenCover:
-            return Router(
-                isPresented: Binding(
-                    get: { self.presentingFullScreenCover },
-                    set: { self.presentingFullScreenCover = $0 }
-                )
-            )
+            return Router(parentRouter: self)
+        case .sheet:
+            return Router(parentRouter: self)
         }
     }
 }
@@ -138,31 +140,38 @@ extension Router {
         }
     }
     
-    /// Pops the top view from the navigation stack.
+    /// Removes one or more views from the navigation stack.
     ///
-    /// This method removes the most recently pushed view from the `NavigationPath`,
-    /// effectively navigating **back one screen** in the navigation hierarchy.
+    /// This method removes the most recently pushed views from the `NavigationPath`,
+    /// effectively navigating back one or more screens in the navigation hierarchy.
     ///
-    /// If the navigation stack is **not empty**, the last view is removed.
-    /// If the stack is already empty, calling this method has no effect.
+    /// - If the navigation stack is **not empty**, the specified number of views are removed.
+    /// - If the requested number exceeds available views, all remaining views are removed.
+    /// - If the stack is already empty, calling this method has no effect.
+    /// - If a negative value is provided, the method does nothing.
     ///
+    /// - Parameter last: The number of views to pop from the stack. Defaults to 1.
     /// - Note: This method only affects **push-based navigation** and does not dismiss modals.
     ///
     /// ### Example Usage:
     /// ```swift
     /// struct ViewA: View {
-    ///     // . . .
+    ///     @EnvironmentObject var router: Router<AppRoute>
+    ///
     ///     var body: some View {
-    ///        Button("Go Back") {
-    ///             router.pop() // Navigates back one screen
+    ///         VStack {
+    ///             // Go back one screen
+    ///             Button("Back") { router.pop() }
+    ///
+    ///             // Go back three screens (or as many as available)
+    ///             Button("Back to Main") { router.pop(last: 3) }
     ///         }
     ///     }
     /// }
     /// ```
-    public func pop() {
-        if !path.isEmpty {
-            path.removeLast()
-        }
+    public func pop(last: Int = 1) {
+        guard !path.isEmpty else { return }
+        path.removeLast(min(last, path.count))
     }
     
     /// Pop to the root screen. Removes all views from navigation stack.
@@ -192,7 +201,7 @@ extension Router {
     ///     var body: some View {
     ///         VStack {
     ///             Button("Close") {
-    ///                 router.dismiss() // Dismisses the current modal or presentation
+    ///                 router.dismissChild() // Dismisses the current modal or presentation
     ///             }
     ///         }
     ///     }
@@ -229,9 +238,16 @@ extension Router {
     /// }
     /// ```
     public func dismissSelf() {
-        isPresented.wrappedValue = nil
+        parentRouter?.dismissChild()
     }
-    
+
+    /// Dismisses entire hierarchy
+    public func dismissAllFromRoot() {
+        rootRouter.presentingSheet = nil
+        rootRouter.presentingFullScreenCover = nil
+        rootRouter.popToRoot()
+    }
+
     private func push(_ appRoute: Destination) {
         path.append(appRoute)
     }
