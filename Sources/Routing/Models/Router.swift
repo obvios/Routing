@@ -171,7 +171,7 @@ extension Router {
     /// ```
     public func pop(last: Int = 1) {
         guard !path.isEmpty else { return }
-        path.removeLast(last)
+        path.removeLast(min(last, path.count))
     }
     
     /// Pop to the root screen. Removes all views from navigation stack.
