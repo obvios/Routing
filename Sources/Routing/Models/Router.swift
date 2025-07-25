@@ -233,10 +233,9 @@ extension Router {
         path = .init(newStack)
     }
     
-    /// Dismisses the currently presented modal (sheet or full-screen cover).
+    /// Dismisses the currently presented child modal (sheet or full-screen cover).
     ///
-    /// This method dismisses both `presentingSheet` and `presentingFullScreenCover`,
-    /// ensuring any active modal presentation is dismissed.
+    /// This method dismisses both `presentingSheet` and `presentingFullScreenCover`, ensuring any active modal presentation is dismissed.
     /// SwiftUI only allows one modal presentation at a time, so typically only one of these will be non-nil.
     ///
     /// - Note: This method only dismisses **modals and presentations**, not pushed views within the navigation stack.
