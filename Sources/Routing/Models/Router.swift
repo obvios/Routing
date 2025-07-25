@@ -267,17 +267,14 @@ extension Router {
     ///     var body: some View {
     ///         VStack {
     ///             Button("Close Self") {
-    ///                 router.dismissSelf() // Requests the parent to dismiss this router
+    ///                 router.dismissSelf() // Requests parent to dismiss this router and its presentations
     ///             }
     ///         }
     ///     }
     /// }
     /// ```
     public func dismissSelf() {
-        dismissChild() // in case something is presented dismiss also
-        if !path.isEmpty {
-            popToRoot() // if not empty we wont be able to self dismiss
-        }
+        dismissChild() // Dismiss any presented sheet or full-screen modal first
         parentRouter?.dismissChild()
     }
 
