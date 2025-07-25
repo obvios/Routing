@@ -163,22 +163,21 @@ extension Router {
     ///
     ///     var body: some View {
     ///         VStack {
-    ///             Button("Push to Details") {
-    ///                 router.routeTo(.details(id: "123"), via: .push) // Pushes from current router
+    ///             Button("Go to Details (Push)") {
+    ///                 router.routeTo(.details(id: "123"), via: .push) // Pushes onto the navigation stack
     ///             }
     ///
-    ///             Button("Present Sheet in Deepest Context") {
-    ///                 router.routeTo(.settings, via: .sheet, target: .deepest) // Presents sheet using deepest child router
+    ///             Button("Go to Settings (Sheet)") {
+    ///                 router.routeTo(.settings, via: .sheet) // Presents as a sheet
     ///             }
     ///
-    ///             Button("Show Full Screen from Root") {
-    ///                 router.routeTo(.profile, via: .fullScreenCover, target: .root) // Presents from root router
+    ///             Button("Go to Profile (Full Screen)") {
+    ///                 router.routeTo(.profile, via: .fullScreenCover) // Presents as full-screen
     ///             }
     ///         }
     ///     }
     /// }
     /// ```
-
     public func routeTo(_ route: Destination, via navigationType: NavigationType, target: NavigationTarget = .current) {
         switch navigationType {
         case .push:
@@ -243,8 +242,17 @@ extension Router {
     ///
     /// ### Example Usage:
     /// ```swift
-    /// router.dismissChild()
-    /// ```
+    /// struct ContentView: View {
+    ///     @StateObject var router = Router<ExampleRoute>()
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             Button("Close") {
+    ///                 router.dismissChild() // Dismisses the current presentation
+    ///             }
+    ///         }
+    ///     }
+    /// }
     public func dismissChild() {
         presentingSheet = nil
         presentingFullScreenCover = nil
