@@ -235,7 +235,7 @@ extension Router {
     
     /// Dismisses the currently presented modal (sheet or full-screen cover).
     ///
-    /// This method clears both `presentingSheet` and `presentingFullScreenCover`,
+    /// This method dismisses both `presentingSheet` and `presentingFullScreenCover`,
     /// ensuring any active modal presentation is dismissed.
     /// SwiftUI only allows one modal presentation at a time, so typically only one of these will be non-nil.
     ///
@@ -278,14 +278,13 @@ extension Router {
     ///     var body: some View {
     ///         VStack {
     ///             Button("Close Self") {
-    ///                 router.dismissSelf() // Requests parent to dismiss this router and its presentations
+    ///                 router.dismissSelf() // Requests the parent to dismiss this router
     ///             }
     ///         }
     ///     }
     /// }
     /// ```
     public func dismissSelf() {
-        dismissChild() // Dismiss any presented sheet or full-screen modal first
         parentRouter?.dismissChild()
     }
 
