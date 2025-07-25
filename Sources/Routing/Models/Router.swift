@@ -22,7 +22,7 @@ public class Router<Destination: Routable>: ObservableObject {
     ///
     /// ### Example Usage:
     /// ```swift
-    /// let router = Router<ExampleRoute>(isPresented: .constant(nil))
+    /// let router = Router<ExampleRoute>()
     ///
     /// if router.isPresenting {
     ///     print("A modal is currently being presented")
@@ -153,7 +153,7 @@ extension Router {
     /// ### Example Usage:
     /// ```swift
     /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///     @StateObject var router = Router<ExampleRoute>()
     ///
     ///     var body: some View {
     ///         VStack {
@@ -239,7 +239,7 @@ extension Router {
     /// ### Example Usage:
     /// ```swift
     /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///     @StateObject var router = Router<ExampleRoute>()
     ///
     ///     var body: some View {
     ///         VStack {
@@ -269,7 +269,7 @@ extension Router {
     /// ### Example Usage:
     /// ```swift
     /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///     @StateObject var router = Router<ExampleRoute>()
     ///
     ///     var body: some View {
     ///         VStack {

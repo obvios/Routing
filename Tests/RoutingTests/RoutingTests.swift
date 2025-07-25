@@ -7,7 +7,7 @@ final class RoutingTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        router = Router(isPresented: .constant(.none))
+        router = Router()
     }
     
     override func tearDown() {
