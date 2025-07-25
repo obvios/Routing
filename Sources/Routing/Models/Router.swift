@@ -141,7 +141,7 @@ extension Router {
 
 // MARK: - Navigation Functions
 extension Router {
-    /// Routes to the specified `Destination` using the given `NavigationType`.
+    /// Routes to the specified `Destination` using the given `NavigationType` and `NavigationTarget`.
     ///
     /// - Parameters:
     ///   - route: The `Destination` to navigate to.
@@ -149,6 +149,12 @@ extension Router {
     ///      - `.push` → Pushes the destination onto the navigation stack.
     ///      - `.sheet` → Presents the destination as a modal sheet.
     ///      - `.fullScreenCover` → Presents the destination as a full-screen cover.
+    ///   - target: The `NavigationTarget` that determines which router instance should handle the navigation.
+    ///      - `.current` → Uses the current router instance.
+    ///      - `.parent` → Routes through the parent router, if any.
+    ///      - `.child` → Routes through the child router, if any.
+    ///      - `.root` → Routes through the root-most router in the hierarchy.
+    ///      - `.deepest` → Routes through the deepest active child router in the hierarchy.
     ///
     /// ### Example Usage:
     /// ```swift
@@ -157,21 +163,22 @@ extension Router {
     ///
     ///     var body: some View {
     ///         VStack {
-    ///             Button("Go to Details (Push)") {
-    ///                 router.routeTo(.details(id: "123"), via: .push) // Pushes onto the navigation stack
+    ///             Button("Push to Details") {
+    ///                 router.routeTo(.details(id: "123"), via: .push) // Pushes from current router
     ///             }
     ///
-    ///             Button("Go to Settings (Sheet)") {
-    ///                 router.routeTo(.settings, via: .sheet) // Presents as a sheet
+    ///             Button("Present Sheet in Deepest Context") {
+    ///                 router.routeTo(.settings, via: .sheet, target: .deepest) // Presents sheet using deepest child router
     ///             }
     ///
-    ///             Button("Go to Profile (Full Screen)") {
-    ///                 router.routeTo(.profile, via: .fullScreenCover) // Presents as full-screen
+    ///             Button("Show Full Screen from Root") {
+    ///                 router.routeTo(.profile, via: .fullScreenCover, target: .root) // Presents from root router
     ///             }
     ///         }
     ///     }
     /// }
     /// ```
+
     public func routeTo(_ route: Destination, via navigationType: NavigationType, target: NavigationTarget = .current) {
         switch navigationType {
         case .push:
