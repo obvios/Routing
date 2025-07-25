@@ -227,35 +227,21 @@ extension Router {
         path = .init(newStack)
     }
     
-    /// Dismisses the currently presented child modal (sheet or full-screen cover).
+    /// Dismisses the currently presented modal (sheet or full-screen cover).
     ///
-    /// This method checks and dismisses the currently active presentation in the following order:
-    /// 1. If a **sheet**  is presented, it is dismissed.
-    /// 2. If a **full-screen cover** is presented, it is dismissed.
+    /// This method clears both `presentingSheet` and `presentingFullScreenCover`,
+    /// ensuring any active modal presentation is dismissed.
     ///
-    /// - Note: This method only dismisses **modals and presentations**, not pushed views within the navigation stack.
-    /// To navigate back in the stack, use `pop()` instead.
+    /// - Note: SwiftUI only allows one modal presentation at a time, so typically only one of these will be non-nil.
     ///
     /// ### Example Usage:
     /// ```swift
-    /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>()
-    ///
-    ///     var body: some View {
-    ///         VStack {
-    ///             Button("Close") {
-    ///                 router.dismissChild() // Dismisses the current modal or presentation
-    ///             }
-    ///         }
-    ///     }
-    /// }
+    /// router.dismissChild()
     /// ```
     public func dismissChild() {
-        if presentingSheet != nil {
-            presentingSheet = nil
-        } else if presentingFullScreenCover != nil {
-            presentingFullScreenCover = nil
-        }
+        presentingSheet = nil
+        presentingFullScreenCover = nil
+        childRouter = nil
     }
     
     /// Dismisses the router itself if it was presented by a parent.
@@ -281,13 +267,13 @@ extension Router {
     /// }
     /// ```
     public func dismissSelf() {
+        dismissChild() // in case there is presented from self dismiss also
         parentRouter?.dismissChild()
     }
 
     /// Dismisses entire hierarchy
     public func dismissAllFromRoot() {
-        rootRouter.presentingSheet = nil
-        rootRouter.presentingFullScreenCover = nil
+        rootRouter.dismissChild()
         rootRouter.popToRoot()
     }
 
