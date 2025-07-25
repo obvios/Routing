@@ -267,7 +267,10 @@ extension Router {
     /// }
     /// ```
     public func dismissSelf() {
-        dismissChild() // in case there is presented from self dismiss also
+        dismissChild() // in case something is presented dismiss also
+        if !path.isEmpty {
+            popToRoot() // if not empty we wont be able to self dismiss
+        }
         parentRouter?.dismissChild()
     }
 
