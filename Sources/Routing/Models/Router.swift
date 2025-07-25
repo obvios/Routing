@@ -237,8 +237,10 @@ extension Router {
     ///
     /// This method clears both `presentingSheet` and `presentingFullScreenCover`,
     /// ensuring any active modal presentation is dismissed.
+    /// SwiftUI only allows one modal presentation at a time, so typically only one of these will be non-nil.
     ///
-    /// - Note: SwiftUI only allows one modal presentation at a time, so typically only one of these will be non-nil.
+    /// - Note: This method only dismisses **modals and presentations**, not pushed views within the navigation stack.
+    /// To navigate back in the stack, use `pop()` instead.
     ///
     /// ### Example Usage:
     /// ```swift
