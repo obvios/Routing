@@ -39,14 +39,14 @@ public class Router<Destination: Routable>: ObservableObject {
         parentRouter == nil
     }
 
-    /// Indicates whether this router has an active child router.
-    public var hasChild: Bool {
-        childRouter != nil
-    }
-
     /// Indicates whether the router is at the root with no path and no modal presentation.
     public var isFullyAtRoot: Bool {
         isRoot && path.isEmpty && !isPresenting
+    }
+
+    /// Indicates whether this router has an active child router.
+    public var hasChild: Bool {
+        childRouter != nil
     }
 
     /// Initializes a new router with an optional reference to a parent router.
