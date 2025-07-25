@@ -12,12 +12,12 @@ public enum NavigationType {
 public enum NavigationTarget {
     /// Use this router instance
     case current
-    /// Use furthest child in hierarchy
-    case deepest
-    /// Use top-most parent
-    case root
     /// Use parent router
     case parent
     /// Use child router
     case child
+    /// Use top-most parent (root)
+    case root
+    /// Use furthest child in hierarchy (deepest)
+    case deepest
 }
