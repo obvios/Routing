@@ -253,6 +253,7 @@ extension Router {
     ///         }
     ///     }
     /// }
+    /// ```
     public func dismissChild() {
         presentingSheet = nil
         presentingFullScreenCover = nil
