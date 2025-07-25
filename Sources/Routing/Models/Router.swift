@@ -10,6 +10,8 @@ public class Router<Destination: Routable>: ObservableObject {
     @Published var presentingFullScreenCover: Destination?
     /// Reference to parent to be able to dismiss
     private weak var parentRouter: Router<Destination>?
+    /// Reference to child Router to be able to reference the last router
+    private var childRouter: Router<Destination>?
 
     /// Indicates whether a modal or full-screen presentation is currently active.
     ///
@@ -20,7 +22,7 @@ public class Router<Destination: Routable>: ObservableObject {
     ///
     /// ### Example Usage:
     /// ```swift
-    /// let router = Router<ExampleRoute>(isPresented: .constant(nil))
+    /// let router = Router<ExampleRoute>()
     ///
     /// if router.isPresenting {
     ///     print("A modal is currently being presented")
@@ -31,7 +33,23 @@ public class Router<Destination: Routable>: ObservableObject {
     public var isPresenting: Bool {
         presentingSheet != nil || presentingFullScreenCover != nil
     }
-    
+
+    /// Indicates whether this router is the root (i.e. has no parent).
+    public var isRoot: Bool {
+        parentRouter == nil
+    }
+
+    /// Indicates whether the router is at the root with no path and no modal presentation.
+    public var isFullyAtRoot: Bool {
+        isRoot && path.isEmpty && !isPresenting
+    }
+
+    /// Indicates whether this router has an active child router.
+    public var hasChild: Bool {
+        childRouter != nil
+    }
+
+    /// Initializes a new router with an optional reference to a parent router.
     public init(parentRouter: Router<Destination>? = nil) {
         self.parentRouter = parentRouter
     }
@@ -40,6 +58,27 @@ public class Router<Destination: Routable>: ObservableObject {
 // MARK: - Helper Properties
 extension Router {
 
+    /// Resolves the appropriate router based on the given navigation target.
+    private func targetRouter(for target: NavigationTarget) -> Router {
+        switch target {
+        case .current: self
+        case .deepest: deepestChildRouter ?? self
+        case .root: rootRouter
+        case .parent: parentRouter ?? self
+        case .child: childRouter ?? self
+        }
+    }
+
+    /// Returns the deepest (last) child router in the hierarchy, if any.
+    private var deepestChildRouter: Router? {
+        var current = self
+        while let next = current.childRouter {
+            current = next
+        }
+        return current === self ? nil : current
+    }
+
+    /// Returns the top-most parent router in the hierarchy (the root).
     private var rootRouter: Router {
         var current = self
         while let parent = current.parentRouter {
@@ -89,16 +128,20 @@ extension Router {
         case .push:
             return self
         case .fullScreenCover:
-            return Router(parentRouter: self)
+            let child = Router(parentRouter: self)
+            childRouter = child
+            return child
         case .sheet:
-            return Router(parentRouter: self)
+            let child = Router(parentRouter: self)
+            childRouter = child
+            return child
         }
     }
 }
 
 // MARK: - Navigation Functions
 extension Router {
-    /// Routes to the specified `Destination` using the given `NavigationType`.
+    /// Routes to the specified `Destination` using the given `NavigationType` and `NavigationTarget`.
     ///
     /// - Parameters:
     ///   - route: The `Destination` to navigate to.
@@ -106,11 +149,17 @@ extension Router {
     ///      - `.push` → Pushes the destination onto the navigation stack.
     ///      - `.sheet` → Presents the destination as a modal sheet.
     ///      - `.fullScreenCover` → Presents the destination as a full-screen cover.
+    ///   - target: The `NavigationTarget` that determines which router instance should handle the navigation.
+    ///      - `.current` → Uses the current router instance.
+    ///      - `.parent` → Routes through the parent router, if any.
+    ///      - `.child` → Routes through the child router, if any.
+    ///      - `.root` → Routes through the root-most router in the hierarchy.
+    ///      - `.deepest` → Routes through the deepest active child router in the hierarchy.
     ///
     /// ### Example Usage:
     /// ```swift
     /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///     @StateObject var router = Router<ExampleRoute>()
     ///
     ///     var body: some View {
     ///         VStack {
@@ -129,14 +178,14 @@ extension Router {
     ///     }
     /// }
     /// ```
-    public func routeTo(_ route: Destination, via navigationType: NavigationType) {
+    public func routeTo(_ route: Destination, via navigationType: NavigationType, target: NavigationTarget = .current) {
         switch navigationType {
         case .push:
-            push(route)
+            push(route, target: target)
         case .sheet:
-            presentSheet(route)
+            presentSheet(route, target: target)
         case .fullScreenCover:
-            presentFullScreen(route)
+            presentFullScreen(route, target: target)
         }
     }
     
@@ -186,9 +235,8 @@ extension Router {
     
     /// Dismisses the currently presented child modal (sheet or full-screen cover).
     ///
-    /// This method checks and dismisses the currently active presentation in the following order:
-    /// 1. If a **sheet**  is presented, it is dismissed.
-    /// 2. If a **full-screen cover** is presented, it is dismissed.
+    /// This method dismisses both `presentingSheet` and `presentingFullScreenCover`, ensuring any active modal presentation is dismissed.
+    /// SwiftUI only allows one modal presentation at a time, so typically only one of these will be non-nil.
     ///
     /// - Note: This method only dismisses **modals and presentations**, not pushed views within the navigation stack.
     /// To navigate back in the stack, use `pop()` instead.
@@ -196,23 +244,21 @@ extension Router {
     /// ### Example Usage:
     /// ```swift
     /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///     @StateObject var router = Router<ExampleRoute>()
     ///
     ///     var body: some View {
     ///         VStack {
     ///             Button("Close") {
-    ///                 router.dismissChild() // Dismisses the current modal or presentation
+    ///                 router.dismissChild() // Dismisses the current presentation
     ///             }
     ///         }
     ///     }
     /// }
     /// ```
     public func dismissChild() {
-        if presentingSheet != nil {
-            presentingSheet = nil
-        } else if presentingFullScreenCover != nil {
-            presentingFullScreenCover = nil
-        }
+        presentingSheet = nil
+        presentingFullScreenCover = nil
+        childRouter = nil
     }
     
     /// Dismisses the router itself if it was presented by a parent.
@@ -226,7 +272,7 @@ extension Router {
     /// ### Example Usage:
     /// ```swift
     /// struct ContentView: View {
-    ///     @StateObject var router = Router<ExampleRoute>(isPresented: .constant(nil))
+    ///     @StateObject var router = Router<ExampleRoute>()
     ///
     ///     var body: some View {
     ///         VStack {
@@ -243,20 +289,22 @@ extension Router {
 
     /// Dismisses entire hierarchy
     public func dismissAllFromRoot() {
-        rootRouter.presentingSheet = nil
-        rootRouter.presentingFullScreenCover = nil
+        rootRouter.dismissChild()
         rootRouter.popToRoot()
     }
 
-    private func push(_ appRoute: Destination) {
-        path.append(appRoute)
+    /// Pushes a route onto the navigation stack of the specified target router.
+    private func push(_ appRoute: Destination, target: NavigationTarget) {
+        targetRouter(for: target).path.append(appRoute)
     }
-    
-    private func presentSheet(_ route: Destination) {
-        self.presentingSheet = route
+
+    /// Presents a route as a sheet on the specified target router.
+    private func presentSheet(_ route: Destination, target: NavigationTarget) {
+        targetRouter(for: target).presentingSheet = route
     }
-    
-    private func presentFullScreen(_ route: Destination) {
-        self.presentingFullScreenCover = route
+
+    /// Presents a route as a full screen cover on the specified target router.
+    private func presentFullScreen(_ route: Destination, target: NavigationTarget) {
+        targetRouter(for: target).presentingFullScreenCover = route
     }
 }

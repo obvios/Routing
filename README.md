@@ -72,7 +72,7 @@ import SwiftUI
 import Routing
 
 struct ContentView: View {
-    @StateObject var router: Router<ExampleRoute> = .init(isPresented: .constant(.none))
+    @StateObject var router = Router<ExampleRoute>()
     
     var body: some View {
         RoutingView(router) { _ in
@@ -153,7 +153,7 @@ import SwiftUI
 import Routing
 
 struct ContentView: View {
-    @StateObject var router: Router<ExampleRoute> = .init(isPresented: .constant(.none))
+    @StateObject var router = Router<ExampleRoute>()
     
     var body: some View {
         RoutingView(router) { _ in
@@ -186,8 +186,8 @@ import SwiftUI
 import Routing
 
 struct MainTabView: View {
-    @StateObject var routerA = Router<ExampleRouteA>(isPresented: .constant(nil))
-    @StateObject var routerB = Router<ExampleRouteB>(isPresented: .constant(nil))
+    @StateObject var routerA = Router<ExampleRouteA>()
+    @StateObject var routerB = Router<ExampleRouteB>()
 
     var body: some View {
         TabView {
